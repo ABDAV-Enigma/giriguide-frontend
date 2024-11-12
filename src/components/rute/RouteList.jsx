@@ -83,19 +83,25 @@ const RouteList = () => {
         onOpenChange={onOpen}
         onClose={onClose}
         content={
-          <>
-            <p>{routesDetail?.title}</p>
-            <p>{routesDetail?.description}</p>
+          <div className='mt-1'>
+            <p className='font-medium mb-2'>Rute : {routesDetail?.title}</p>
+            <p className='font-medium mb-4'>
+              Deskripsi : {routesDetail?.description}
+            </p>
+            <p className='font-medium mb-1'>Alur Rute : </p>
             {routesDetail?.routes.map((route, index) => (
-              <p key={route?.from + route?.to + Math.random() * 100}>
+              <p
+                className='font-medium mb-1'
+                key={route?.from + route?.to + Math.random() * 100}
+              >
                 {index + 1}. Dari {route?.from} ke {route?.to} dengan{" "}
                 {route?.transportation} dengan estimasi waktu {route?.estimate}{" "}
                 dan jarak {route?.distance}
               </p>
             ))}
-          </>
+          </div>
         }
-        title='Details'
+        title='Details Routes'
         primaryActionText={"Update"}
         secondaryActionText={"Close"}
         onPrimaryAction={() => {
@@ -122,7 +128,7 @@ const RouteList = () => {
               </ModalHeader>
               <ModalBody className='flex justify-center items-center'>
                 <AiOutlineCloseCircle className='text-error text-center text-9xl mb-8 mt-3' />
-                <p className="text-center text-error">{customAlertMessage}</p>
+                <p className='text-center text-error'>{customAlertMessage}</p>
               </ModalBody>
               <ModalFooter className='flex gap-2 items-center'>
                 {isDelete && (
