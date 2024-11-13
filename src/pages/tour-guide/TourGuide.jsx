@@ -11,12 +11,23 @@ import FormTourGuide from "../../components/tour-guide/FormTourGuide";
 import TourGuideList from "../../components/tour-guide/TourGuideList";
 import { useEffect, useState } from "react";
 import CustomModal from "../../components/CustomModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTourGuide } from "../../redux/feature/tourGuideSlice";
 
 const TourGuide = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isModalErrorMessage, setIsModalErrorMessage] = useState(false);
   const { status, error } = useSelector((state) => state.tourGuide);
+  const [searchByName, setSearchByName] = useState("");
+  const dispatch = useDispatch();
+
+  const handleSearch = (e) => {
+    setSearchByName(e.target.value);
+  };
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    dispatch(fetchTourGuide({ name: searchByName, page: 1, size: 12 }));
+  };
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -38,8 +49,8 @@ const TourGuide = () => {
   }, [status]);
 
   return (
-    <section className='font-inter h-full'>
-      <h1 className='mb-5 text-3xl font-bold text-mainSoil'>
+    <section className="font-inter h-full">
+      <h1 className="mb-5 text-3xl font-bold text-mainSoil">
         Tour Guide Management
       </h1>
       <CustomModal
@@ -48,24 +59,31 @@ const TourGuide = () => {
         content={error}
       />
 
-      <div className='flex justify-end'>
+      <div className="flex justify-end gap-4 mr-28">
+        <form onSubmit={handleSearchSubmit}>
+          <input
+            type="search"
+            className="w-full border border-zinc-400 p-2 rounded-lg text-zinc-950"
+            placeholder="Search Mountain Name"
+            value={searchByName}
+            onChange={handleSearch}
+          />
+        </form>
         <CustomButton
           customStyles={"w-[200px] mr-28"}
-          onClick={handleOpenModal}
-        >
+          onClick={handleOpenModal}>
           Add Tour Guide
         </CustomButton>
       </div>
       <Modal
-        className='h-4/5 overflow-scroll'
-        size='5xl'
+        className="h-4/5 overflow-scroll"
+        size="5xl"
         isOpen={isOpenModal}
-        onOpenChange={(open) => setIsOpenModal(open)}
-      >
+        onOpenChange={(open) => setIsOpenModal(open)}>
         <ModalContent>
-          {(closeModal) => (
+          {() => (
             <>
-              <ModalHeader className='flex flex-col gap-1'>
+              <ModalHeader className="flex flex-col gap-1">
                 Add New Tour Guide
               </ModalHeader>
               <ModalBody>
@@ -73,10 +91,9 @@ const TourGuide = () => {
               </ModalBody>
               <ModalFooter>
                 <Button
-                  color='danger'
-                  variant='light'
-                  onPress={handleCloseModal}
-                >
+                  color="danger"
+                  variant="light"
+                  onPress={handleCloseModal}>
                   Close
                 </Button>
               </ModalFooter>

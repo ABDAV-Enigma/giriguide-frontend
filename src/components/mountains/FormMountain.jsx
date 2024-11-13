@@ -59,9 +59,9 @@ const FormMountain = ({ onClose, formInput = false }) => {
       setName(selectedMountain.name || "");
       setLocation(selectedMountain.city || "");
       setDescription(selectedMountain.description || "");
-      setStatus(selectedMountain.status || "NORMAL");
+      setStatus(selectedMountain.status || "");
       setMessage(selectedMountain.message || "");
-      setUseSimaksi(selectedMountain.useSimaksi || false);
+      setUseSimaksi(selectedMountain.useSimaksi);
       setSimaksiPrice(selectedMountain.priceSimaksi || "");
       setImage(selectedMountain.image || null);
       setTips(selectedMountain.tips || "");
@@ -136,22 +136,22 @@ const FormMountain = ({ onClose, formInput = false }) => {
       resetForm();
       dispatch(setIsMountainUpdating(false));
       dispatch(setSelectedMountain(null));
-      dispatch(fetchMountain({ page: 1, size: 5 }));
+      dispatch(fetchMountain({ page: 1, size: 12 }));
       onClose();
       return;
     }
 
-    if (!name || !location || !description || !image || !tips || !bestTime) {
+    if (!isImageValid) {
+      handleOpenCustomAlert("Please upload a valid image");
+      return;
+    }
+    if (!name || !location || !description || !tips || !bestTime || !image) {
       handleOpenCustomAlert("Please fill in all the required fields.");
       return;
     }
 
     if (!isPositiveNumber(simaksiPrice)) {
       handleOpenCustomAlert("Please use a positive number");
-      return;
-    }
-    if (!isImageValid) {
-      handleOpenCustomAlert("Please upload a valid image");
       return;
     }
     if (!isDescriptionValid) {

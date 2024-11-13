@@ -68,15 +68,19 @@ const authSlice = createSlice({
         return (state = { ...state, status: "loading" });
       })
       .addCase(login.fulfilled, (state, action) => {
-        return (state = {
-          ...state,
-          token: action.payload.data.token,
-          role: action.payload.data.role,
-          email: action.payload.data.email,
-          userId: action.payload.data.userId,
-          status: "success",
-          isLoggedIn: true,
-        });
+        if (action.payload.data.role === "ROLE_ADMIN") {
+          return {
+            ...state,
+            token: action.payload.data.token,
+            role: action.payload.data.role,
+            email: action.payload.data.email,
+            userId: action.payload.data.userId,
+            status: "success",
+            isLoggedIn: true,
+          };
+        } else {
+          return { ...state, status: "failed", error: "You are not admin" };
+        }
       })
       .addCase(login.rejected, (state, action) => {
         return {

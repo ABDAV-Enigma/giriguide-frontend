@@ -21,10 +21,10 @@ const Login = () => {
   let isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const token = useSelector((state) => state.auth.token);
   let status = useSelector((state) => state.auth.status);
+  const error = useSelector((state) => state.auth.error);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const role = useSelector((state) => state.auth.role);
   const userId = useSelector((state) => state.auth.userId);
   const emailUser = useSelector((state) => state.auth.email);
@@ -34,14 +34,11 @@ const Login = () => {
   useEffect(() => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     setIsEmailValid(email ? emailRegex.test(email) : true);
-    // const passwordRegex =
-    // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    // setIsPasswordValid(password ? passwordRegex.test(password) : true);
-  }, [email, password]);
+  }, [email]);
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setErrorMessage("Email dan Password harus di isi");
+      setErrorMessage("Email and password are required");
       onOpen();
       return;
     }
@@ -53,9 +50,14 @@ const Login = () => {
 
   useEffect(() => {
     const getKeepLogin = async () => {
+      const role = localStorage.getItem("role");
+      if (role !== "ROLE_ADMIN") {
+        return;
+      }
       const token = localStorage.getItem("token");
       const jwt = jwtDecode(token);
       const isTokenExpired = jwt.exp < Date.now() / 1000;
+
       console.log("Decoded", jwt.exp);
       console.log("Is expired", token, isTokenExpired, Date.now()), jwt.exp;
       const condition = token && !isTokenExpired;
@@ -67,7 +69,7 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && role === "ROLE_ADMIN") {
       localStorage.setItem("token", token);
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("userId", userId);
@@ -95,7 +97,7 @@ const Login = () => {
 
   useEffect(() => {
     if (status === "failed") {
-      setErrorMessage("Email atau Password anda salah");
+      setErrorMessage(error);
       onOpen();
     }
   }, [status]);
@@ -152,7 +154,7 @@ const Login = () => {
         </section>
         <Button
           className={` px-5 py-2 rounded-md text-bgLight font-bold w-full ${
-            !isEmailValid || !isPasswordValid
+            !isEmailValid
               ? "bg-successfulSecondary text-neutral-900"
               : "bg-successful hover:bg-successfulHover"
           }`}

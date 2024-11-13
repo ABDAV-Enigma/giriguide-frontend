@@ -3,10 +3,12 @@ import axiosInstance from "../../api/axiosInstance";
 
 const fetchTourGuide = createAsyncThunk(
   "tourGuide/fetchTourGuide",
-  async ({ page, size }, { rejectWithValue }) => {
+  async ({ page, size, name }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/tour-guide?page=${page}` + `&size=${size}`
+        `/tour-guide?page=${page}` +
+          `&size=${size}` +
+          (name ? `&name=${name}` : "")
       );
       return response.data;
     } catch (e) {
