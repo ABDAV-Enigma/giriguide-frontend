@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosInstance";
 
+const size = 12;
+
 const fetchMountain = createAsyncThunk(
   "mountain/fetchMountain",
   async ({ page, size, search, city = "" }) => {
@@ -30,10 +32,16 @@ const fetchMountainById = createAsyncThunk(
 );
 const updateMountain = createAsyncThunk(
   "mountain/updateMountain",
-  async ({ id, data }) => {
+  async ({ id, data, image }) => {
     try {
+      if (image) {
+        await axiosInstance.patch(`/mountains/${id}`, image);
+        await axiosInstance.put(`/mountains/${id}`, data);
+        const res = await axiosInstance.get(`/mountains?page=1&size=${size}`);
+        return res.data;
+      }
       await axiosInstance.put(`/mountains/${id}`, data);
-      const res = await axiosInstance.get(`/mountains?page=1&size=5`);
+      const res = await axiosInstance.get(`/mountains?page=1&size=${size}`);
       return res.data;
     } catch (e) {
       return e.response.data;
@@ -45,7 +53,7 @@ const updateImageMountain = createAsyncThunk(
   async ({ id, data }) => {
     try {
       await axiosInstance.patch(`/mountains/${id}`, data);
-      const res = await axiosInstance.get(`/mountains?page=1&size=5`);
+      const res = await axiosInstance.get(`/mountains?page=1&size=${size}`);
       return res.data;
     } catch (e) {
       return e.response.data;
@@ -58,7 +66,9 @@ const createMountain = createAsyncThunk(
   async (data) => {
     try {
       await axiosInstance.post(`/mountains`, data);
-      const response = await axiosInstance.get(`/mountains?page=1&size=5`);
+      const response = await axiosInstance.get(
+        `/mountains?page=1&size=${size}`
+      );
       return response.data;
     } catch (e) {
       return e.response.data;

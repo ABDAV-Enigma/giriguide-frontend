@@ -6,7 +6,7 @@ function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const navigate = useNavigate();
   if (isLoggedIn) {
-    navigate("/mountain");
+    navigate("/dashboard");
   }
   return <Login />;
 }

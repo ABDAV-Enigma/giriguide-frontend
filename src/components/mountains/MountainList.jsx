@@ -273,7 +273,7 @@ const MountainList = () => {
         }}
         rowsPerPage={mountainsPerPage}
         rounded
-      />{" "}
+      />
     </section>
   );
 };

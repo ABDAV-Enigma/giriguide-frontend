@@ -85,9 +85,19 @@ const createMasteredHikingPoint = createAsyncThunk(
 
 const updateTourGuide = createAsyncThunk(
   "tourGuide/updateTourGuide",
-  async ({ id, data }, { rejectWithValue }) => {
+  async ({ id, data, image }, { rejectWithValue }) => {
     try {
-      await axiosInstance.patch(`/tour-guide/data/${id}`, data);
+      if (image) {
+        const responeseUpdate = await axiosInstance.patch(
+          `/tour-guide/data/${id}/update-image`,
+          image
+        );
+        console.log(responeseUpdate);
+        await axiosInstance.patch(`/tour-guide/data/${id}`, data);
+        return { id, data };
+      }
+      const res = await axiosInstance.patch(`/tour-guide/data/${id}`, data);
+      console.log(res.data);
       return { id, data };
     } catch (e) {
       return rejectWithValue(e.response.data);

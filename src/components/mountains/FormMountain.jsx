@@ -17,11 +17,11 @@ import {
   fetchMountain,
   setIsMountainUpdating,
   setSelectedMountain,
-  updateImageMountain,
   updateMountain,
 } from "../../redux/feature/mountainSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { isPositiveNumber } from "../../validation/validate";
+import ConfirmationModal from "../CustomModalConfirmation";
 
 const FormMountain = ({ onClose, formInput = false }) => {
   const dispatch = useDispatch();
@@ -40,9 +40,19 @@ const FormMountain = ({ onClose, formInput = false }) => {
   const { selectedMountain, isMountainUpdating } = useSelector(
     (state) => state.mountain
   );
+  const mountainStateStatus = useSelector((state) => state.mountain.status);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [customAlertMessage, setCustomAlertMessage] = useState("");
   const [isCustomAlertOpen, setIsCustomAlertOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    onClose();
+  };
 
   const handleCloseCustomAlert = () => {
     setIsCustomAlertOpen(false);
@@ -92,12 +102,6 @@ const FormMountain = ({ onClose, formInput = false }) => {
         handleOpenCustomAlert("No selected mountain provided");
         return;
       }
-      if (image.type === "image/jpeg" || image.type === "image/png") {
-        formData.append("image", image);
-        dispatch(
-          updateImageMountain({ id: selectedMountain.id, data: formData })
-        );
-      }
 
       if (selectedMountain.status !== status) {
         editedMountain.status = status;
@@ -106,6 +110,10 @@ const FormMountain = ({ onClose, formInput = false }) => {
         editedMountain.message = message;
       }
       if (selectedMountain.priceSimaksi !== simaksiPrice) {
+        if (!isPositiveNumber(simaksiPrice)) {
+          handleOpenCustomAlert("Simaksi price must be a positive number");
+          return;
+        }
         editedMountain.priceSimaksi = simaksiPrice;
       }
       if (selectedMountain.useSimaksi !== useSimaksi) {
@@ -118,6 +126,10 @@ const FormMountain = ({ onClose, formInput = false }) => {
         editedMountain.city = location;
       }
       if (selectedMountain.description !== description) {
+        if (description?.length > 900) {
+          handleOpenCustomAlert("Description must be less than 900 characters");
+          return;
+        }
         editedMountain.description = description;
       }
       if (selectedMountain.tips !== tips) {
@@ -127,17 +139,31 @@ const FormMountain = ({ onClose, formInput = false }) => {
         editedMountain.bestTime = bestTime;
       }
 
-      dispatch(
-        updateMountain({
-          id: selectedMountain.id,
-          data: editedMountain,
-        })
-      );
+      if (image.type === "image/jpeg" || image.type === "image/png") {
+        formData.append("image", image);
+        console.log("Running with image", editedMountain, formData);
+        dispatch(
+          updateMountain({
+            id: selectedMountain.id,
+            data: editedMountain,
+            image: formData,
+          })
+        );
+      } else {
+        console.log("Running without image", editedMountain);
+        dispatch(
+          updateMountain({
+            id: selectedMountain.id,
+            data: editedMountain,
+          })
+        );
+      }
+      if (mountainStateStatus === "success") {
+        openModal();
+      }
       resetForm();
       dispatch(setIsMountainUpdating(false));
       dispatch(setSelectedMountain(null));
-      dispatch(fetchMountain({ page: 1, size: 12 }));
-      onClose();
       return;
     }
 
@@ -172,7 +198,7 @@ const FormMountain = ({ onClose, formInput = false }) => {
 
     dispatch(createMountain(formData));
     resetForm();
-    dispatch(fetchMountain({ page: 1, size: 5 }));
+    dispatch(fetchMountain({ page: 1, size: 12 }));
   };
 
   const handleImageChange = (e) => {
@@ -210,6 +236,11 @@ const FormMountain = ({ onClose, formInput = false }) => {
         e.preventDefault();
         handleAddMountain();
       }}>
+      <ConfirmationModal
+        onClose={closeModal}
+        message={"Data berhasil di Update"}
+        isOpen={isModalOpen}
+      />
       <h3 className="text-3xl text-successfulHover">
         {!formInput
           ? "Mountain Details"

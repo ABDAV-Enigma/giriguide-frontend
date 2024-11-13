@@ -16,6 +16,7 @@ import Transaction from "./pages/transaction/Transaction.jsx";
 import Widraw from "./pages/widraw/Widraw.jsx";
 import Route from "./pages/rute/Route.jsx";
 import AdminDashboard from "./pages/Dashboard.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -90,7 +91,7 @@ const router = createBrowserRouter([
       </SecureLink>
     ),
   },
-  { path: "*", element: <div>Not Found</div> },
+  { path: "*", element: <NotFound /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
