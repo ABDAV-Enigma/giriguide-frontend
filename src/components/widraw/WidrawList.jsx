@@ -141,6 +141,13 @@ const WidrawList = () => {
           <p className="w-[150px] font-bold text-md">Action</p>
         </CardBody>
       </Card>
+      {widraws.length === 0 && (
+        <section className="flex justify-center items-center">
+          <p className="text-center text-2xl text-zinc-500 font-bold">
+            No Withdraw
+          </p>
+        </section>
+      )}
       {widraws.map((widraw) => (
         <Card key={widraw.id} className="mb-3">
           <CardBody className="flex flex-row justify-between">

@@ -21,14 +21,6 @@ const TourGuide = () => {
   const [searchByName, setSearchByName] = useState("");
   const dispatch = useDispatch();
 
-  // const handleSearch = (e) => {
-  //   setSearchByName(e.target.value);
-  // };
-  // const handleSearchSubmit = (e) => {
-  //   e.preventDefault();
-  //   dispatch(fetchTourGuide({ name: searchByName, page: 1, size: 12 }));
-  // };
-
   const handleOpenModal = () => {
     setIsOpenModal(true);
   };
@@ -63,7 +55,7 @@ const TourGuide = () => {
         content={error}
       />
 
-      <div className="flex justify-end gap-4 mr-28">
+      <div className="flex justify-end gap-4">
         <form>
           <input
             type="search"

@@ -13,7 +13,6 @@ import {
   SelectItem,
   useDisclosure,
 } from "@nextui-org/react";
-import CustomButton from "../CustomButton";
 import CustomModal from "../CustomModal";
 import TransactionDetails from "./TransactionDetails";
 
@@ -50,7 +49,7 @@ const TransactionList = () => {
   ];
 
   return (
-    <section className='flex flex-col gap-4'>
+    <section className="flex flex-col gap-4">
       <CustomModal
         isOpen={isOpen}
         onClose={onClose}
@@ -59,43 +58,49 @@ const TransactionList = () => {
             <TransactionDetails />
           </>
         }
-        title='Transaction Details'
+        title="Transaction Details"
         primaryActionText={"Close"}
         onPrimaryAction={onClose}
       />
       <Select
         value={transactionStatus}
         onChange={(e) => setTransactionStatus(e.target.value)}
-        variant='bordered'
+        variant="bordered"
         bordered
-        label='Status'
-      >
+        label="Status">
         {statusOptions.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}
           </SelectItem>
         ))}
       </Select>
-      <Card className=''>
-        <CardBody className='flex bg-mainSoil text-white flex-row justify-between'>
-          <section className='flex gap-4 px-6'>
-            <p className='w-[200px] font-bold text-md'>Tour Guide Name</p>
-            <p className='w-[258px] font-bold text-md'>Customer Name</p>
-            <p className='w-[200px] font-bold text-md'>Status</p>
-            <p className='w-[150px] font-bold text-md'>Nama Gunung</p>
+      <Card className="">
+        <CardBody className="flex bg-mainSoil text-white flex-row justify-between">
+          <section className="flex gap-4 px-6">
+            <p className="w-[200px] font-bold text-md">Tour Guide Name</p>
+            <p className="w-[258px] font-bold text-md">Customer Name</p>
+            <p className="w-[200px] font-bold text-md">Status</p>
+            <p className="w-[150px] font-bold text-md">Nama Gunung</p>
           </section>
-          <p className='w-[150px] font-bold text-md'>Action</p>
+          <p className="w-[150px] font-bold text-md">Action</p>
         </CardBody>
       </Card>
+      {transactions.length === 0 && (
+        <section className="flex justify-center items-center">
+          <p className="text-center text-2xl text-zinc-500 font-bold">
+            No Transaction
+          </p>
+        </section>
+      )}
       {transactions.map((transaction) => (
         <Card key={transaction.id}>
           <CardBody>
-            <section className='flex justify-between gap-4 px-6 items-center'>
-              <section className='flex gap-4 items-center'>
-                <p className='w-[200px] font-medium text-md'>
+            <section className="flex justify-between gap-4 px-6 items-center">
+              <section className="flex gap-4 items-center">
+                <p className="w-[200px] font-medium text-md">
                   {transaction.tourGuideName}
                 </p>
-                <p className='w-[180px] font-medium text-md'>
+                <p className="w-[180px] font-medium text-md">
                   {transaction.customerName}
                 </p>
                 <p
@@ -111,29 +116,17 @@ const TransactionList = () => {
                       UPCOMING:
                         "bg-blue-600 text-white font-bold px-6 py-2 rounded-lg w-[200px] flex justify-center items-center h-10",
                     }[transaction.transactionStatus]
-                  }
-                >
+                  }>
                   {transaction.transactionStatus}
                 </p>
-                <p className='ml-20 font-medium'>{transaction.mountainName}</p>
+                <p className="ml-20 font-medium">{transaction.mountainName}</p>
               </section>
-              {/* <CustomButton
-                onClick={() => {
-                  dispatch(fetchTransactionById(transaction.id));
-                  onOpen();
-                }}
-                autoFocus
-                className='text-neutral-50 bg-successful'
-              >
-                Detail
-              </CustomButton> */}
               <button
-                className='mr-12 bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-6 border-b-4 border-blue-700 hover:border-blue-500 rounded-md'
+                className="mr-12 bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-6 border-b-4 border-blue-700 hover:border-blue-500 rounded-md"
                 onClick={() => {
                   dispatch(fetchTransactionById(transaction.id));
                   onOpen();
-                }}
-              >
+                }}>
                 Detail
               </button>
             </section>

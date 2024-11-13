@@ -54,6 +54,7 @@ const RouteForm = () => {
     setCustomAlertMessage(message);
     setIsCustomAlertOpen(true);
   };
+
   const confirmAddFragmentRoute = () => {
     handleOpenCustomAlert(`Yakin ingin menambahkan rute?`);
   };
@@ -149,6 +150,9 @@ const RouteForm = () => {
           data,
         })
       );
+
+      setTitle("");
+      setDescription("");
       dispatch(setIsRouteUpdating(false));
       dispatch(clearFragmentRoute());
       setIndexEditStep(0);
@@ -209,17 +213,109 @@ const RouteForm = () => {
         onClose={onClose}
         content={
           <>
-            <h1>Create Route</h1>
-            <Input
-              placeholder="Masukkan judul rute"
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
-            />
-            <Input
-              placeholder="Masukkan deskripsi rute"
-              onChange={(e) => setDescription(e.target.value)}
-              value={description}
-            />
+            <section className="flex gap-4 items-center">
+              <p>Tahapan</p>
+              {Array.from({ length: fragmentRoute?.length + 1 || 1 }).map(
+                (item, index) => (
+                  <Button
+                    key={index}
+                    onPress={() => setIndexEditStep(index)}
+                    className={`${
+                      indexEditStep === index ||
+                      (index === 0 && fragmentRoute.length === 0)
+                        ? "bg-mainSoil"
+                        : "bg-successful"
+                    } text-white font-bold`}>
+                    {index + 1}
+                  </Button>
+                )
+              )}
+            </section>
+            <h1>{isRouteUpdating ? "Updating Route" : "Creating Route"}</h1>
+            <section className="flex gap-4 w-full">
+              {indexEditStep === 0 && (
+                <Input
+                  label="Dari rute"
+                  placeholder="Masukkan dari rute"
+                  value={from}
+                  type="text"
+                  onChange={(e) => setFrom(e.target.value)}
+                  clearable
+                />
+              )}
+              <Input
+                label="Tujuan rute"
+                placeholder="Masukkan tujuan rute"
+                value={to}
+                type="text"
+                onChange={(e) => setTo(e.target.value)}
+                clearable
+              />
+              <Input
+                label="Menggunakan transportasi"
+                placeholder="Masukan nama transportasi"
+                value={transportation}
+                type="text"
+                onChange={(e) => setTransportation(e.target.value)}
+                clearable
+              />
+            </section>
+            <section className="flex gap-4 w-full">
+              <Input
+                label="Estimasi waktu"
+                placeholder="Masukkan berapa lama waktu"
+                value={estimate}
+                type="text"
+                onChange={(e) => setEstimate(e.target.value)}
+                clearable
+              />
+              <Input
+                label="Jarak"
+                placeholder="Masukan Jarak"
+                value={distance}
+                type="text"
+                onChange={(e) => setDistance(e.target.value)}
+                clearable
+              />
+            </section>
+            <section className="flex gap-4 justify-center items-center">
+              {indexEditStep > 0 && (
+                <IoArrowBackCircle
+                  className="text-5xl rounded-full text-errorHover"
+                  onClick={handleBack}
+                />
+              )}
+              {indexEditStep < (fragmentRoute?.length || 0) && (
+                <IoArrowForwardCircle
+                  className="text-5xl rounded-full text-successful"
+                  onClick={handleNext}
+                />
+              )}
+              <CustomButton
+                onClick={
+                  fragmentRoute?.length <= indexEditStep
+                    ? confirmAddFragmentRoute
+                    : () => handleEditRoute(indexEditStep)
+                }
+                customStyles="bg-successfulHover">
+                {fragmentRoute?.length <= indexEditStep ? "Simpan" : "Edit"}
+              </CustomButton>
+              {fragmentRoute?.length > 0 && (
+                <CustomButton
+                  customStyles="bg-error"
+                  onClick={() => dispatch(clearFragmentRoute())}>
+                  Clear
+                </CustomButton>
+              )}
+              {/* {indexEditStep === fragmentRoute?.length &&
+                fragmentRoute?.length > 0 && (
+                  <CustomButton
+                    customStyles="bg-mainSoil"
+                    onClick={handleConfirmSubmit}>
+                    {isRouteUpdating ? "Submit updated data" : "Submit"}
+                  </CustomButton>
+                )} */}
+            </section>
           </>
         }
         primaryActionText={"Submit"}
@@ -261,109 +357,20 @@ const RouteForm = () => {
         </ModalContent>
       </Modal>
 
-      <section className="flex gap-4 items-center">
-        <p>Tahapan</p>
-        {Array.from({ length: fragmentRoute?.length + 1 || 1 }).map(
-          (item, index) => (
-            <Button
-              key={index}
-              onPress={() => setIndexEditStep(index)}
-              className={`${
-                indexEditStep === index ||
-                (index === 0 && fragmentRoute.length === 0)
-                  ? "bg-mainSoil"
-                  : "bg-successful"
-              } text-white font-bold`}>
-              {index + 1}
-            </Button>
-          )
-        )}
-      </section>
-      <h1>Form pembutan rute</h1>
-      <section className="flex gap-4 w-full">
-        {indexEditStep === 0 && (
-          <Input
-            label="Dari rute"
-            placeholder="Masukkan dari rute"
-            value={from}
-            type="text"
-            onChange={(e) => setFrom(e.target.value)}
-            clearable
-          />
-        )}
-        <Input
-          label="Tujuan rute"
-          placeholder="Masukkan tujuan rute"
-          value={to}
-          type="text"
-          onChange={(e) => setTo(e.target.value)}
-          clearable
-        />
-        <Input
-          label="Menggunakan transportasi"
-          placeholder="Masukan nama transportasi"
-          value={transportation}
-          type="text"
-          onChange={(e) => setTransportation(e.target.value)}
-          clearable
-        />
-      </section>
-      <section className="flex gap-4 w-full">
-        <Input
-          label="Estimasi waktu"
-          placeholder="Masukkan berapa lama waktu"
-          value={estimate}
-          type="text"
-          onChange={(e) => setEstimate(e.target.value)}
-          clearable
-        />
-        <Input
-          label="Jarak"
-          placeholder="Masukan Jarak"
-          value={distance}
-          type="text"
-          onChange={(e) => setDistance(e.target.value)}
-          clearable
-        />
-      </section>
-      <section className="flex gap-4 justify-center items-center">
-        {indexEditStep > 0 && (
-          <IoArrowBackCircle
-            className="text-5xl rounded-full text-errorHover"
-            onClick={handleBack}
-          />
-        )}
-        {indexEditStep < (fragmentRoute?.length || 0) && (
-          <IoArrowForwardCircle
-            className="text-5xl rounded-full text-successful"
-            onClick={handleNext}
-          />
-        )}
-        <CustomButton
-          onClick={
-            fragmentRoute?.length <= indexEditStep
-              ? confirmAddFragmentRoute
-              : () => handleEditRoute(indexEditStep)
-          }
-          customStyles="bg-successfulHover">
-          {fragmentRoute?.length <= indexEditStep ? "Simpan" : "Edit"}
-        </CustomButton>
-        {fragmentRoute?.length > 0 && (
-          <CustomButton
-            customStyles="bg-error"
-            onClick={() => dispatch(clearFragmentRoute())}>
-            Clear
-          </CustomButton>
-        )}
-        {indexEditStep === fragmentRoute?.length &&
-          fragmentRoute?.length > 0 && (
-            <CustomButton
-              customStyles="bg-mainSoil"
-              onClick={handleConfirmSubmit}>
-              {isRouteUpdating ? "Submit updated data" : "Submit"}
-            </CustomButton>
-          )}
-      </section>
+      <h1>Create Route</h1>
+      <Input
+        placeholder="Masukkan judul rute"
+        onChange={(e) => setTitle(e.target.value)}
+        value={title}
+      />
+      <Input
+        placeholder="Masukkan deskripsi rute"
+        onChange={(e) => setDescription(e.target.value)}
+        value={description}
+      />
+      <CustomButton customStyles="bg-mainSoil" onClick={handleConfirmSubmit}>
+        {isRouteUpdating ? "Submit updated data" : "Submit"}
+      </CustomButton>
     </section>
   );
 };

@@ -18,7 +18,7 @@ const CustomModal = ({
   onClose,
 }) => {
   return (
-    <Modal isOpen={isOpen} onOpenChange={onClose}>
+    <Modal isOpen={isOpen} onOpenChange={onClose} size="5xl" onClose={onClose}>
       <ModalContent>
         {() => (
           <>

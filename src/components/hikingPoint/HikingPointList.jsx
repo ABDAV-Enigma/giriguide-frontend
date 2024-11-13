@@ -44,6 +44,13 @@ const HikingPointList = () => {
 
   return (
     <section className="flex flex-wrap gap-3 mt-5 p-4">
+      {hikingPoints.length === 0 && (
+        <section className="flex justify-center items-center">
+          <p className="text-center text-2xl text-zinc-500 font-bold">
+            No Hiking Point
+          </p>
+        </section>
+      )}
       {hikingPoints.map((hikingPoint) => (
         <Card
           key={hikingPoint?.id}
