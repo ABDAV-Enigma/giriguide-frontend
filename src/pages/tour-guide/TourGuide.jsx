@@ -21,13 +21,13 @@ const TourGuide = () => {
   const [searchByName, setSearchByName] = useState("");
   const dispatch = useDispatch();
 
-  const handleSearch = (e) => {
-    setSearchByName(e.target.value);
-  };
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    dispatch(fetchTourGuide({ name: searchByName, page: 1, size: 12 }));
-  };
+  // const handleSearch = (e) => {
+  //   setSearchByName(e.target.value);
+  // };
+  // const handleSearchSubmit = (e) => {
+  //   e.preventDefault();
+  //   dispatch(fetchTourGuide({ name: searchByName, page: 1, size: 12 }));
+  // };
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -48,6 +48,10 @@ const TourGuide = () => {
     }
   }, [status]);
 
+  useEffect(() => {
+    dispatch(fetchTourGuide({ page: 1, size: 12, name: searchByName }));
+  }, [searchByName]);
+
   return (
     <section className="font-inter h-full">
       <h1 className="mb-5 text-3xl font-bold text-mainSoil">
@@ -60,13 +64,13 @@ const TourGuide = () => {
       />
 
       <div className="flex justify-end gap-4 mr-28">
-        <form onSubmit={handleSearchSubmit}>
+        <form>
           <input
             type="search"
             className="w-full border border-zinc-400 p-2 rounded-lg text-zinc-950"
             placeholder="Search Mountain Name"
             value={searchByName}
-            onChange={handleSearch}
+            onChange={(e) => setSearchByName(e.target.value)}
           />
         </form>
         <CustomButton

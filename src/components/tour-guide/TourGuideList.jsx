@@ -1,5 +1,4 @@
 import {
-  button,
   Button,
   Card,
   CardBody,
@@ -30,7 +29,6 @@ import FormTourGuide from "./FormTourGuide";
 import TourGuideHikingPointList from "./TourGuideHikingPointList";
 import AddMasteredHikingPoint from "./AddMasteredHikingPoint";
 import HamsterLoading from "../HamsterLoading";
-import { MdDelete } from "react-icons/md";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 const TourGuideList = () => {
@@ -124,24 +122,23 @@ const TourGuideList = () => {
   return (
     <>
       {status === "loading" && <HamsterLoading />}
-      <section className='mt-5 flex flex-wrap gap-5 justify-center'>
+      <section className="mt-5 flex flex-wrap gap-5 justify-center">
         <Modal
           isOpen={isOpen}
-          size='5xl'
+          size="5xl"
           onClose={handleTourGuideDetailsClose}
           onOpenChange={onOpenChange}
-          className='h-4/5 overflow-scroll'
-        >
+          className="h-4/5 overflow-scroll">
           <ModalContent>
             {(closeModal) => (
               <>
-                <ModalHeader className='flex flex-col gap-1'>
+                <ModalHeader className="flex flex-col gap-1">
                   Tour Guide
                 </ModalHeader>
                 <ModalBody>
-                  <section className='flex gap-5 w-full px-5 py-2'>
+                  <section className="flex gap-5 w-full px-5 py-2">
                     <FormTourGuide onClose={closeModal} />
-                    <section className='w-full'>
+                    <section className="w-full">
                       <AddMasteredHikingPoint />
                       <TourGuideHikingPointList />
                     </section>
@@ -149,10 +146,9 @@ const TourGuideList = () => {
                 </ModalBody>
                 <ModalFooter>
                   <Button
-                    color='danger'
-                    variant='light'
-                    onPress={handleTourGuideDetailsClose}
-                  >
+                    color="danger"
+                    variant="light"
+                    onPress={handleTourGuideDetailsClose}>
                     Close
                   </Button>
                 </ModalFooter>
@@ -167,38 +163,29 @@ const TourGuideList = () => {
           classNames={{
             backdrop:
               "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
-          }}
-        >
+          }}>
           <ModalContent>
             {() => (
               <>
-                <ModalHeader className='flex flex-col gap-1'>
+                <ModalHeader className="flex flex-col gap-1">
                   {isDelete ? "Delete" : "Error"}
                 </ModalHeader>
-                <ModalBody className='flex justify-center items-center'>
-                  <AiOutlineCloseCircle className='text-error text-center text-9xl mb-8 mt-3' />
-                  <p className='text-center text-error'>{customAlertMessage}</p>
+                <ModalBody className="flex justify-center items-center">
+                  <AiOutlineCloseCircle className="text-error text-center text-9xl mb-8 mt-3" />
+                  <p className="text-center text-error">{customAlertMessage}</p>
                 </ModalBody>
-                <ModalFooter className='flex gap-2 items-center'>
+                <ModalFooter className="flex gap-2 items-center">
                   {isDelete && (
-                    // <MdDelete
-                    //   className='text-error text-3xl cursor-pointer'
-                    //   onClick={() => handleDelete(deleteId)}
-                    // >
-                    //   Delete
-                    // </MdDelete>
                     <button
-                      className='bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-4 border-b-4 border-red-700 hover:border-red-500 rounded-md'
-                      onClick={() => handleDelete(deleteId)}
-                    >
+                      className="bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-4 border-b-4 border-red-700 hover:border-red-500 rounded-md"
+                      onClick={() => handleDelete(deleteId)}>
                       Delete
                     </button>
                   )}
                   <Button
-                    color='danger'
-                    variant='light'
-                    onPress={handleCloseCustomAlert}
-                  >
+                    color="danger"
+                    variant="light"
+                    onPress={handleCloseCustomAlert}>
                     Close
                   </Button>
                 </ModalFooter>
@@ -206,54 +193,46 @@ const TourGuideList = () => {
             )}
           </ModalContent>
         </Modal>
+        {tourGuides.length === 0 && (
+          <section className="flex justify-center items-center">
+            <p className="text-center text-2xl text-zinc-500 font-bold">
+              No Tour Guides
+            </p>
+          </section>
+        )}
         {tourGuides?.map((tourGuide) => {
           if (!tourGuide?.id) return null;
           return (
-            <section key={tourGuide.id} className='mt-5 flex flex-col gap-5'>
-              <section className='flex flex-1 justify-between'>
+            <section key={tourGuide.id} className="mt-5 flex flex-col gap-5">
+              <section className="flex flex-1 justify-between">
                 <Card
-                  shadow='sm'
-                  className='w-[300px]'
+                  shadow="sm"
+                  className="w-[300px]"
                   isPressable
-                  onPress={() => console.log("item pressed")}
-                >
-                  <CardBody className='overflow-visible p-0'>
+                  onPress={() => console.log("item pressed")}>
+                  <CardBody className="overflow-visible p-0">
                     <Image
-                      shadow='sm'
-                      radius='lg'
-                      width='100%'
+                      shadow="sm"
+                      radius="lg"
+                      width="100%"
                       alt={tourGuide.name}
-                      className='w-full object-cover h-[140px]'
+                      className="w-full object-cover h-[140px]"
                       src={tourGuide.image}
                     />
                   </CardBody>
-                  <CardFooter className='text-small justify-between gap-5'>
+                  <CardFooter className="text-small justify-between gap-5">
                     <b>{tourGuide.name}</b>
-                    <section className='buttonGroup flex gap-4 items-center'>
-                      {/* <MdDelete
-                        className="text-3xl text-error font-bold"
-                        onClick={() =>
-                          confirmDelete(tourGuide.id, tourGuide.name)
-                        }
-                      /> */}
+                    <section className="buttonGroup flex gap-4 items-center">
                       <button
                         onClick={() =>
                           confirmDelete(tourGuide.id, tourGuide.name)
                         }
-                        className='bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-4 border-b-4 border-red-700 hover:border-red-500 rounded-md'
-                      >
+                        className="bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-4 border-b-4 border-red-700 hover:border-red-500 rounded-md">
                         Delete
                       </button>
-                      {/* <Button
-                        className='text-neutral-50 bg-successful hover:bg-successfulHover font-bold'
-                        onClick={() => handleDetails(tourGuide)}
-                      >
-                        Details
-                      </Button> */}
                       <button
-                        className='bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded-md'
-                        onClick={() => handleDetails(tourGuide)}
-                      >
+                        className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded-md"
+                        onClick={() => handleDetails(tourGuide)}>
                         Detail
                       </button>
                     </section>

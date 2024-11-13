@@ -21,36 +21,38 @@ const Mountain = ({ active = "/mountain" }) => {
   const dispatch = useDispatch();
 
   // Search
-  const handleSearch = (e) => {
-    setSearchMountain(e.target.value);
-  };
+  // const handleSearch = (e) => {
+  //   setSearchMountain(e.target.value);
+  // };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    dispatch(fetchMountain({ search: searchMountain, page: 1, size: 12 }));
-  };
+  // const handleSearchSubmit = (e) => {
+  //   e.preventDefault();
+  //   dispatch(fetchMountain({ search: searchMountain, page: 1, size: 12 }));
+  // };
 
   useEffect(() => {
     if (active) {
       setNavbarActive(active);
     }
   }, [active]);
-
+  useEffect(() => {
+    dispatch(fetchMountain({ page: 1, size: 12, search: searchMountain }));
+  }, [searchMountain]);
   return (
-    <section className='font-inter h-full'>
-      <h1 className='mb-5 text-3xl font-bold text-mainSoil'>
+    <section className="font-inter h-full">
+      <h1 className="mb-5 text-3xl font-bold text-mainSoil">
         Mountain Management
       </h1>
 
-      <div className='flex justify-end gap-4 mr-28'>
-        <form onSubmit={handleSearchSubmit}>
+      <div className="flex justify-end gap-4 mr-28">
+        <form>
           {navbarActive === "/mountain" && (
             <input
-              type='search'
-              className='w-full border border-zinc-400 p-2 rounded-lg text-zinc-950'
-              placeholder='Search Mountain Name'
+              type="search"
+              className="w-full border border-zinc-400 p-2 rounded-lg text-zinc-950"
+              placeholder="Search Mountain Name"
               value={searchMountain}
-              onChange={handleSearch}
+              onChange={(e) => setSearchMountain(e.target.value)}
             />
           )}
         </form>
@@ -62,19 +64,18 @@ const Mountain = ({ active = "/mountain" }) => {
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        className='h-4/5 overflow-scroll'
-      >
+        className="h-4/5 overflow-scroll">
         <ModalContent>
           {(closeModal) => (
             <>
-              <ModalHeader className='flex flex-col gap-1'>
+              <ModalHeader className="flex flex-col gap-1">
                 Add New Mountain
               </ModalHeader>
               <ModalBody>
                 <FormMountain onClose={closeModal} formInput={true} />
               </ModalBody>
               <ModalFooter>
-                <Button color='danger' variant='light' onPress={onClose}>
+                <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
               </ModalFooter>
