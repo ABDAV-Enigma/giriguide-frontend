@@ -26,32 +26,31 @@ const AdminDashboard = () => {
     dispatch(fetchDashboard({ month: filterMonth, year: filterYear }));
   }, [filterMonth, filterYear]);
 
+  useEffect(() => {
+    console.log(filterMonth, filterYear);
+  }, [filterMonth, filterYear]);
   return (
     <section className="flex flex-col gap-6">
       <section className="absolute top-2 right-10 flex gap-6 w-1/4">
         <Select
           label="Year"
-          value={filterYear}
+          selectedKeys={[String(filterYear)]}
           variant="bordered"
           onChange={(e) => setFilterYear(e.target.value)}>
           {Array.from({ length: 10 }, (_, index) => (
-            <SelectItem
-              key={new Date().getFullYear() - index}
-              value={new Date().getFullYear() - index}>
-              {new Date().getFullYear() - index}
+            <SelectItem key={String(new Date().getFullYear() - index)}>
+              {String(new Date().getFullYear() - index)}
             </SelectItem>
           ))}
         </Select>
 
         <Select
           label="Month"
-          value={filterMonth}
+          selectedKeys={[String(filterMonth)]}
           variant="bordered"
           onChange={(e) => setFilterMonth(e.target.value)}>
           {Array.from({ length: 12 }, (_, index) => (
-            <SelectItem key={index + 1} value={index + 1}>
-              {index + 1}
-            </SelectItem>
+            <SelectItem key={String(index + 1)}>{String(index + 1)}</SelectItem>
           ))}
         </Select>
       </section>
