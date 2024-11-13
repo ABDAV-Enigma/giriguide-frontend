@@ -26,6 +26,7 @@ import {
   isNikValid,
   isPositiveNumberWithMinValue,
 } from "../../validation/validate";
+import ConfirmationModal from "../CustomModalConfirmation";
 
 const FormTourGuide = ({ formInput = false }) => {
   const dispatch = useDispatch();
@@ -49,6 +50,8 @@ const FormTourGuide = ({ formInput = false }) => {
   const [isImageValid, setIsImageValid] = useState(true);
   const [isValidNIK, setIsValidNIK] = useState(true);
   const [isValidOld, setIsValidOld] = useState(true);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { selectedTourGuide, isTourGuideUpdating, tourGuideId } = useSelector(
     (state) => state.tourGuide
@@ -162,7 +165,11 @@ const FormTourGuide = ({ formInput = false }) => {
       if (selectedTourGuide.bankAccount != bankAccount) {
         tourGuideUpdate.bankAccount = bankAccount;
       }
-      dispatch(updateTourGuide({ id: tourGuideId, data: tourGuideUpdate }));
+      dispatch(
+        updateTourGuide({ id: tourGuideId, data: tourGuideUpdate })
+      ).then(() => {
+        openModal();
+      });
       return;
     }
 
@@ -249,6 +256,9 @@ const FormTourGuide = ({ formInput = false }) => {
     clearState();
   };
 
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   const clearState = () => {
     setName("");
     setNIK("");
@@ -279,41 +289,42 @@ const FormTourGuide = ({ formInput = false }) => {
 
   return (
     <form
-      className="flex flex-col gap-4 justify-center"
-      onSubmit={handleAddTourGuide}>
-      <h3 className="text-3xl text-successfulHover">
+      className='flex flex-col gap-4 justify-center'
+      onSubmit={handleAddTourGuide}
+    >
+      <h3 className='text-3xl text-successfulHover'>
         {!formInput
           ? isTourGuideUpdating
             ? "Update Tour Guide"
             : "Tour Guide Details"
           : "Add Tour Guide"}
       </h3>
-      <section className="flex gap-4 w-full">
+      <section className='flex gap-4 w-full'>
         <Input
-          type="text"
-          label="Full Name"
-          color="successSecondary"
-          variant="bordered"
+          type='text'
+          label='Full Name'
+          color='successSecondary'
+          variant='bordered'
           isRequired
           isDisabled={isTourGuideUpdating == false && formInput == false}
           onChange={(e) => setName(e.target.value)}
           value={name}
         />
-        <section className="w-full flex flex-col gap-4">
+        <section className='w-full flex flex-col gap-4'>
           <Input
             isDisabled={isTourGuideUpdating == false && formInput == false}
-            type="text"
-            label="NIK"
-            color="successSecondary"
+            type='text'
+            label='NIK'
+            color='successSecondary'
             isRequired
             isInvalid={!isPositiveNumber(nik) || !isValidNIK}
-            errorMessage="NIK must be longer than 16 digits and only numbers"
-            variant="bordered"
+            errorMessage='NIK must be longer than 16 digits and only numbers'
+            variant='bordered'
             onChange={(e) => setNIK(e.target.value)}
             value={nik}
           />
           {!isValidNIK && (
-            <p className="text-error">
+            <p className='text-error'>
               NIK harus lebih panjang dari 16 digit dan hanya angka
             </p>
           )}
@@ -321,23 +332,23 @@ const FormTourGuide = ({ formInput = false }) => {
       </section>
       <Input
         isDisabled={isTourGuideUpdating == false && formInput == false}
-        type="text"
-        label="Address"
-        color="successSecondary"
+        type='text'
+        label='Address'
+        color='successSecondary'
         isRequired
-        variant="bordered"
+        variant='bordered'
         onChange={(e) => setAddress(e.target.value)}
         value={address}
       />
       <Textarea
         isDisabled={isTourGuideUpdating == false && formInput == false}
-        type="text"
-        label="Description"
-        color="successSecondary"
+        type='text'
+        label='Description'
+        color='successSecondary'
         isRequired
-        variant="bordered"
+        variant='bordered'
         isInvalid={!isDescriptionValid}
-        errorMessage="Description is too long, please use 900 characters or less"
+        errorMessage='Description is too long, please use 900 characters or less'
         onChange={(e) => {
           setDescription(e.target.value);
           setIsDescriptionValid(e.target.value.length <= 900);
@@ -347,174 +358,185 @@ const FormTourGuide = ({ formInput = false }) => {
       {(isTourGuideUpdating || formInput) && (
         <Input
           isDisabled={isTourGuideUpdating == false && formInput == false}
-          type="file"
-          label="Image"
-          color="successSecondary"
+          type='file'
+          label='Image'
+          color='successSecondary'
           isRequired
           isInvalid={!isImageValid && !isTourGuideUpdating}
-          errorMessage="Image must be in JPEG or PNG format and less than 1MB"
-          variant="bordered"
+          errorMessage='Image must be in JPEG or PNG format and less than 1MB'
+          variant='bordered'
           onChange={handleImageChange}
         />
       )}
-      <section className="flex gap-4 w-full">
+      <section className='flex gap-4 w-full'>
         <Input
           isDisabled={!formInput}
-          type="email"
-          label="Email"
-          color="successSecondary"
+          type='email'
+          label='Email'
+          color='successSecondary'
           isRequired
           isInvalid={!isEmailValid(email)}
-          errorMessage="Please enter a valid email"
-          variant="bordered"
+          errorMessage='Please enter a valid email'
+          variant='bordered'
           onChange={(e) => setEmail(e.target.value)}
           value={email}
         />
         {formInput && (
           <Input
             isDisabled={isTourGuideUpdating == false && formInput == false}
-            type="password"
-            label="Password"
-            color="successSecondary"
-            variant="bordered"
+            type='password'
+            label='Password'
+            color='successSecondary'
+            variant='bordered'
             isRequired
             isInvalid={!isStrongPassword(password)}
-            errorMessage="Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+            errorMessage='Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character'
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
         )}
       </section>
-      <section className="flex gap-4 w-full">
+      <section className='flex gap-4 w-full'>
         <Input
           isDisabled={isTourGuideUpdating == false && formInput == false}
-          type="text"
-          label="Max Hiker"
-          color="successSecondary"
+          type='text'
+          label='Max Hiker'
+          color='successSecondary'
           isRequired
           isInvalid={!isPositiveNumberWithMinValue(maxHiker, 5)}
-          errorMessage="Please use a positive number and min 5"
-          variant="bordered"
+          errorMessage='Please use a positive number and min 5'
+          variant='bordered'
           onChange={(e) => setMaxHiker(e.target.value)}
           value={maxHiker}
         />
         <Input
           isDisabled={isTourGuideUpdating == false && formInput == false}
-          type="text"
-          label="Price"
-          color="successSecondary"
+          type='text'
+          label='Price'
+          color='successSecondary'
           isRequired
           isInvalid={!isPositiveNumber(price)}
-          errorMessage="Please use a positive number"
-          variant="bordered"
+          errorMessage='Please use a positive number'
+          variant='bordered'
           onChange={(e) => setPrice(e.target.value)}
           value={price}
         />
         <Input
           isDisabled={isTourGuideUpdating == false && formInput == false}
-          type="text"
-          label="Additional Price"
-          color="successSecondary"
+          type='text'
+          label='Additional Price'
+          color='successSecondary'
           isRequired
           isInvalid={!isPositiveNumber(additionalPrice)}
-          errorMessage="Please use a positive number"
-          variant="bordered"
+          errorMessage='Please use a positive number'
+          variant='bordered'
           onChange={(e) => setAdditionalPrice(e.target.value)}
           value={additionalPrice}
         />
       </section>
 
-      <section className="flex gap-4 w-full">
+      <section className='flex gap-4 w-full'>
         <Input
           isDisabled={isTourGuideUpdating == false && formInput == false}
-          type="text"
-          label="Total Porter"
-          color="successSecondary"
+          type='text'
+          label='Total Porter'
+          color='successSecondary'
           isRequired
           isInvalid={!isPositiveNumber(totalPorter)}
-          errorMessage="Please use a positive number"
-          variant="bordered"
+          errorMessage='Please use a positive number'
+          variant='bordered'
           onChange={(e) => setTotalPorter(e.target.value)}
           value={totalPorter}
         />
         <Input
           isDisabled={isTourGuideUpdating == false && formInput == false}
-          type="text"
-          label="Price Porter"
-          color="successSecondary"
+          type='text'
+          label='Price Porter'
+          color='successSecondary'
           isRequired
           isInvalid={!isPositiveNumber(pricePorter)}
-          errorMessage="Please use a positive number"
-          variant="bordered"
+          errorMessage='Please use a positive number'
+          variant='bordered'
           onChange={(e) => setPricePorter(e.target.value)}
           value={pricePorter}
         />
       </section>
-      <section className="flex gap-4 w-full">
+      <section className='flex gap-4 w-full'>
         <Input
           isDisabled={isTourGuideUpdating == false && formInput == false}
-          type="date"
-          label="Birth Date"
-          color="successSecondary"
+          type='date'
+          label='Birth Date'
+          color='successSecondary'
           isRequired
-          variant="bordered"
+          variant='bordered'
           isInvalid={isValidOld}
-          errorMessage="Tour guide must be older than 17 years old"
+          errorMessage='Tour guide must be older than 17 years old'
           onChange={(e) => setBirthDate(e.target.value)}
           value={birthDate}
         />
         <Select
           isDisabled={isTourGuideUpdating === false && formInput === false}
-          label="Gender"
-          color="successSecondary"
+          label='Gender'
+          color='successSecondary'
           isRequired
-          variant="bordered"
+          variant='bordered'
           selectedKeys={[gender]}
-          onSelectionChange={(keys) => setGender(Array.from(keys)[0])}>
-          <SelectItem key="MALE">MALE</SelectItem>
-          <SelectItem key="FEMALE">FEMALE</SelectItem>
+          onSelectionChange={(keys) => setGender(Array.from(keys)[0])}
+        >
+          <SelectItem key='MALE'>MALE</SelectItem>
+          <SelectItem key='FEMALE'>FEMALE</SelectItem>
         </Select>
       </section>
       <Input
         isDisabled={isTourGuideUpdating == false && formInput == false}
-        type="text"
-        label="Bank Account"
-        color="successSecondary"
+        type='text'
+        label='Bank Account'
+        color='successSecondary'
         isRequired
         isInvalid={!isPositiveNumber(bankAccount)}
-        errorMessage="Please enter a valid bank account"
-        variant="bordered"
+        errorMessage='Please enter a valid bank account'
+        variant='bordered'
         onChange={(e) => setBankAccount(e.target.value)}
         value={bankAccount}
       />
       {!isTourGuideUpdating && selectedTourGuide && (
         <CustomButton
-          type="button"
-          onPress={() => dispatch(setIsTourGuideUpdating(true))}>
+          type='button'
+          onPress={() => dispatch(setIsTourGuideUpdating(true))}
+        >
           Update Tour Guide
         </CustomButton>
       )}
+
+      {/* INI WOYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY */}
+      <ConfirmationModal
+        onClose={closeModal}
+        message={"Data berhasil di Update"}
+        isOpen={isModalOpen}
+      />
       {isTourGuideUpdating && (
-        <section className="flex w-full gap-4">
+        <section className='flex w-full gap-4'>
           <CustomButton
-            type="submit"
+            type='submit'
             customStyles={
               isDescriptionValid && (isImageValid || isTourGuideUpdating)
                 ? "w-full"
                 : "bg-successfulSecondary text-zinc-900"
-            }>
+            }
+          >
             Submit Updating Tour Guide
           </CustomButton>
         </section>
       )}
       {formInput && (
         <CustomButton
-          type="submit"
+          type='submit'
           customStyles={
             isDescriptionValid && (isImageValid || isTourGuideUpdating)
               ? "w-full"
               : "bg-successfulSecondary text-zinc-900"
-          }>
+          }
+        >
           Add Tour Guide
         </CustomButton>
       )}
@@ -524,21 +546,23 @@ const FormTourGuide = ({ formInput = false }) => {
         classNames={{
           backdrop:
             "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20",
-        }}>
+        }}
+      >
         <ModalContent>
           {() => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className='flex flex-col gap-1'>
                 {"Message"}
               </ModalHeader>
               <ModalBody>
-                <p className="text-error">{customAlertMessage}</p>
+                <p className='text-error'>{customAlertMessage}</p>
               </ModalBody>
-              <ModalFooter className="flex gap-2 items-center">
+              <ModalFooter className='flex gap-2 items-center'>
                 <Button
-                  color="danger"
-                  variant="light"
-                  onPress={handleCloseCustomAlert}>
+                  color='danger'
+                  variant='light'
+                  onPress={handleCloseCustomAlert}
+                >
                   Close
                 </Button>
               </ModalFooter>
