@@ -80,7 +80,8 @@ const TransactionList = () => {
             <p className="w-[200px] font-bold text-md">Tour Guide Name</p>
             <p className="w-[258px] font-bold text-md">Customer Name</p>
             <p className="w-[200px] font-bold text-md">Status</p>
-            <p className="w-[150px] font-bold text-md">Nama Gunung</p>
+            <p className="w-[150px] font-bold text-md">Mountain Name</p>
+            <p className="w-[150px] ml-10 font-bold text-md">Total Price</p>
           </section>
           <p className="w-[150px] font-bold text-md">Action</p>
         </CardBody>
@@ -120,6 +121,10 @@ const TransactionList = () => {
                   {transaction.transactionStatus}
                 </p>
                 <p className="ml-20 font-medium">{transaction.mountainName}</p>
+                <p className="ml-20 font-medium">
+                  Rp.
+                  {" " + transaction.totalPrice.toLocaleString("id-ID")}
+                </p>
               </section>
               <button
                 className="mr-12 bg-blue-500 hover:bg-blue-400 text-white font-bold py-1 px-6 border-b-4 border-blue-700 hover:border-blue-500 rounded-md"

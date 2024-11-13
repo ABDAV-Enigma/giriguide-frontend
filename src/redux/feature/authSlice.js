@@ -2,12 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosInstance";
 export const login = createAsyncThunk(
   "userCredential/login",
-  async (userCredential, { rejectedWithValue }) => {
+  async (userCredential, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`/auth/login`, userCredential);
       return response.data;
-    } catch (e) {
-      return rejectedWithValue(e.response.data);
+    } catch (error) {
+      if (error) {
+        return rejectWithValue(error.response);
+      }
+      return rejectWithValue({ message: "Something went wrong" });
     }
   }
 );
@@ -83,10 +86,21 @@ const authSlice = createSlice({
         }
       })
       .addCase(login.rejected, (state, action) => {
+        console.log(action.payload.data.message.substring(0, 16));
+        if (
+          action.payload.status === 401 &&
+          action.payload.data.message.substring(0, 16) === "401 UNAUTHORIZED"
+        ) {
+          return {
+            ...state,
+            status: "failed",
+            error: "Invalid Email or Password",
+          };
+        }
         return {
           ...state,
           status: "failed",
-          error: action.payload,
+          error: action.payload.data.message,
         };
       })
       .addCase(register.pending, (state) => {

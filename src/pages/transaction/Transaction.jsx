@@ -16,6 +16,3 @@ const Transaction = () => {
 };
 
 export default Transaction;
-
-import { IoAddCircle } from "react-icons/io5";
-import { GrMoney } from "react-icons/gr";

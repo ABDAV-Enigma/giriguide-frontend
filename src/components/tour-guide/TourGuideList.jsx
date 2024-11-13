@@ -97,6 +97,7 @@ const TourGuideList = () => {
       await dispatch(
         fetchTourGuide({ page: currentPage, size: tourGuidesPerPage })
       ).unwrap();
+      // handleTourGuideDetailsClose();
     } catch (error) {
       handleOpenCustomAlert(error.message || "An error occurred");
     }
@@ -137,7 +138,7 @@ const TourGuideList = () => {
                 </ModalHeader>
                 <ModalBody>
                   <section className="flex gap-5 w-full px-5 py-2">
-                    <FormTourGuide onClose={closeModal} />
+                    <FormTourGuide onClose={handleTourGuideDetailsClose} />
                     <section className="w-full">
                       <AddMasteredHikingPoint />
                       <TourGuideHikingPointList />

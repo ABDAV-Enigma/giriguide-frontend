@@ -27,7 +27,7 @@ import {
 } from "../../validation/validate";
 import ConfirmationModal from "../CustomModalConfirmation";
 
-const FormTourGuide = ({ formInput = false }) => {
+const FormTourGuide = ({ formInput = false, onClose }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [nik, setNIK] = useState("");
@@ -303,7 +303,10 @@ const FormTourGuide = ({ formInput = false }) => {
   };
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    onClose();
+  };
 
   const clearState = () => {
     setName("");
