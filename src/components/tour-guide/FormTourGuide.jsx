@@ -178,7 +178,7 @@ const FormTourGuide = ({ formInput = false, onClose }) => {
         tourGuideUpdate.pricePorter = pricePorter;
       }
       if (selectedTourGuide.birthDate != birthDate) {
-        if (!isValidOld) {
+        if (isValidOld) {
           handleOpenCustomAlert("Tour guide must be at least 17 years old.");
           return;
         }

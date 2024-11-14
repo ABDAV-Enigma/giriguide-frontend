@@ -60,7 +60,7 @@ const TourGuide = () => {
           <input
             type="search"
             className="w-full border border-zinc-400 p-2 rounded-lg text-zinc-950"
-            placeholder="Search Mountain Name"
+            placeholder="Search Tour Guide Name"
             value={searchByName}
             onChange={(e) => setSearchByName(e.target.value)}
           />
