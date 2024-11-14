@@ -6,8 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        // target: "http://10.10.102.92:8080",
-        target: "https://urgently-precious-spider.ngrok-free.app",
+        target: "http://10.10.102.92:8080",
         changeOrigin: true,
       },
     },
