@@ -1,12 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  // baseURL: "http://10.10.102.92:8080/api/v1",
-  baseURL: "https://urgently-precious-spider.ngrok-free.app/api/v1",
-  headers: {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36",
-  },
+  baseURL: import.meta.env.VITE_BASE_URL + "/api/v1",
 });
 
 axiosInstance.interceptors.request.use(
